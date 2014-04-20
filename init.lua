@@ -11,19 +11,12 @@ local mode_text = {
   }
 
 
----
----Function
----
-
 function yaw_in_degrees(player)
   local yaw = player:get_look_yaw()*180/math.pi-90
   while yaw < 0 do yaw=yaw+360 end
   while yaw >360 do yaw=yaw-360 end
   return yaw
   end
-
-
-
 
 
 --returns a node that has been offset in the indicated direction
@@ -58,14 +51,12 @@ function pos_to_string(pos)
 end --pos_to_string
 
 
+--attempts to place the item and update inventory
 function item_place(stack,player,pointed,inv,idx)
   --local player_name = player:get_player_name()
-  --minetest.chat_send_all("--placing pointed.type="..pointed.type.." above "..pos_to_string(pointed.above).." under "..pos_to_string(pointed.under).." stack="..stack:to_string())
+  --minetest.chat_send_all(player_name,"--placing pointed.type="..pointed.type.." above "..pos_to_string(pointed.above).." under "..pos_to_string(pointed.under).." stack="..stack:to_string())
   local success
   stack, success = minetest.item_place(stack, player, pointed)
-  local strsuccess="false"
-  --if success then strsuccess="true:" end
-  --minetest.chat_send_all("--placed success="..strsuccess.." stack="..stack:to_string())
   if success then  --if item was placed, put modified stack back in inv
     inv:set_stack("main", idx, stack)
   end --success
@@ -74,24 +65,14 @@ end --item_place
 
 
 
---This function is for use when an explorertool is right clicked
---it finds the inventory item immediatly to the right of the explorertool
---and then places THAT item (if possible)
---
+--This function is for use when the bridge tool is right clicked
+--it finds the inventory item stack immediatly to the right of the bridge tool
+--and then places THAT stack (if possible)
 function bridgetool_place(item, player, pointed)
    local player_name = player:get_player_name()  --for chat messages
   --find index of item to right of wielded tool
   --(could have gotten this directly from item I suppose, but this works fine)
   local idx = player:get_wield_index() + 1
-  --wielded list is usually 8 wide, but a mod might have changed it, so get wielded width
-  local invwidth=9
-  --local gwl=player:get_inventory():get_width(player:get_wield_list())
-  --if gwl==nil then gwl="nil" end
-  --if idx <= invwidth then  --make certain tool was inside the wielded length
-  --I'm abandoning checking the inventory width.  The wielded tool is obviously in
-  --the wield list, however wide it is, and if you put it in the last wield slot,
-  --it will use the material from the first slot in the non wield inventory list.
-  --which is intuitive anyway.
   local inv = player:get_inventory()
   local stack = inv:get_stack("main", idx) --stack=stack to right of tool
   if stack:is_empty() then
@@ -100,7 +81,6 @@ function bridgetool_place(item, player, pointed)
   if stack:is_empty()==false and pointed ~= nil then
     local success
     local yaw = yaw_in_degrees(player)  --cause degrees just work better for my brain
-    --minetest.chat_send_player(player_name, "gwl="..gwl)
     --------------
     local mode = tonumber(item:get_metadata())
     if not mode then
@@ -139,6 +119,7 @@ function bridgetool_place(item, player, pointed)
 end --function bridgetool_place
 
 
+--on left click switch the mode of the bridge tool
 function bridgetool_switchmode(item, player, pointed) --pointed is ignored
   local player_name = player:get_player_name()  --for chat messages
   local mode = tonumber(item:get_metadata())
@@ -157,7 +138,6 @@ function bridgetool_switchmode(item, player, pointed) --pointed is ignored
   end
 
 
-
 minetest.register_craft({
         output = 'bridgetool:bridge_tool',
   recipe = {
@@ -170,7 +150,6 @@ minetest.register_craft({
 
   minetest.register_tool("bridgetool:bridge_tool", {
     description = "Bridge Tool",
---    inventory_image = "bridgetool_m1.png",
     inventory_image = "bridgetool_wield.png",
     wield_image = "bridgetool_wield.png^[transformR90",
     on_place = bridgetool_place,
