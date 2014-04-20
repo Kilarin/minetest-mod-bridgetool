@@ -1,4 +1,5 @@
 A bridge building tool for minetest
+Author Kilarin (Donald Hines)
 
 Extract zipfile to your minetest mod folder, and rename it to bridgetool
 
