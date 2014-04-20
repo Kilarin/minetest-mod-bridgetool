@@ -3,7 +3,7 @@ Author Kilarin (Donald Hines)
 
 Extract zipfile to your minetest mod folder, and rename it to bridgetool
 
-Crafting recepie is
+Crafting recipe is
 
 steel ingot,                     ,steel ingot
            ,    steel ingot      ,
