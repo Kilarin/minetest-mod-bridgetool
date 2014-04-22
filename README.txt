@@ -1,3 +1,5 @@
+Bridge Tool Version 2.0
+
 A bridge building tool for minetest
 Author Kilarin (Donald Hines)
 
@@ -9,4 +11,17 @@ steel ingot,                     ,steel ingot
            ,    steel ingot      ,
            ,mese crystal fragment,
 
+Point the tool and right click to place nodes from the inventory stack directly to the right of the tool
+
+Left click to change mode between
+1: Build forward 
+2: Build diagonally down
+3: Build diagonally up
+
+Left click while holding down the "sneak" key to change the width between 1 and 3.
+
+
 My son helped me with some ideas for this mod. I got a lot of code examples from the screwdriver mod in minetest_game by RealBadAngel, Maciej Kasatkin. I also copied and modified the screwdriver's mode number images for use in the bridge tool inventory images.  They are licensed CC BY-SA 3.0 http://creativecommons.org/licenses/by-sa/3.0/   The source code is licensed CC0 http://creativecommons.org/about/cc0
+Topywo suggested adding wear, correcting down stair orientation, and using not_in_creative_inventory=1
+Sokomine suggested adding width so that you could build 2 or 3 wide.
+
