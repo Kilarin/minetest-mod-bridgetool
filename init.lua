@@ -1,5 +1,5 @@
------------------------------
--- Bridge Tool version 2.0 --
+-----------------------------   
+-- Bridge Tool version 2.1 --
 -----------------------------
 
 --This code was written by Kilarin (Donald Hines)
@@ -11,8 +11,8 @@
 --Sokomine suggested adding width so that you could build 2 or 3 wide.
 
 local bridgetool = {
-	WEAR_PER_USE=0
   --set this value to something higher than zero if you want bridge tool to wear out
+	WEAR_PER_USE=0
 }
 
 local mode_text = {
@@ -61,6 +61,7 @@ function offset_pos(posin,yaw)
 end --offset_pos
 
 
+
 --because built in pos_to_string doesn't handle nil
 function pos_to_string(pos)
   if pos==nil then return "(nil)"
@@ -70,7 +71,8 @@ end --pos_to_string
 
 
 --attempts to place the item and update inventory
-function item_place(stack,player,pointed,inv,idx,mode)
+function item_place(stack,player,pointed,inv,idx,mode,firststairface)
+  if firststairface==nil then firststairface=-2 end
   local player_name = player:get_player_name()
   --minetest.chat_send_player(player_name,"--placing pointed.type="..pointed.type.." above "..pos_to_string(pointed.above).." under "..pos_to_string(pointed.under).." stack="..stack:to_string())
   local success
@@ -81,23 +83,28 @@ function item_place(stack,player,pointed,inv,idx,mode)
     local itemname=stack:get_name()
     --minetest.chat_send_player(player_name,"name="..itemname.." gig="..minetest.get_item_group(itemname,"stairs"))
     --should be able to do this with get_item_group but I cant make it work
-    if mode~=nil and mode==2 and                       -- if mode=2(down)
-         itemname~=nil and string.len(itemname)>7 and  
+    if itemname~=nil and string.len(itemname)>7 and
          string.sub(itemname,1,7)=="stairs:" then      --and item is stairs
       local node = minetest.get_node(pointed.above)
-      --minetest.chat_send_player(player_name,"Param2="..node.param2)
-      node.param2=node.param2+2
-      if node.param2>3 then node.param2=node.param2-4 end            
-      minetest.swap_node(pointed.above, node)
+      --if firststairface is set, then make all other stairs match same direction
+      if firststairface>-1 and node.param2~=firststairface then
+        node.param2=firststairface
+        minetest.swap_node(pointed.above, node)
+      elseif mode~=nil and mode==1 or mode==2 then   -- if mode=1(fwd) or 2(down) need to rotate stair
+        node.param2=node.param2+2
+        if node.param2>3 then node.param2=node.param2-4 end
+        minetest.swap_node(pointed.above, node)
+      end
+      firststairface=node.param2
     end --stair
   end --success
-  return stack,success
+  return stack,success,firststairface
 end --item_place
 
 
 -- add wear and tear to the bridge tool
 function bridgetool_wear(item)
-  if bridgetool.WEAR_PER_USE > 0 then  
+  if bridgetool.WEAR_PER_USE > 0 then
     local item_wear = tonumber(item:get_wear())
   	item_wear = item_wear + bridgetool.WEAR_PER_USE
     if item_wear > 65535 then
@@ -108,7 +115,7 @@ function bridgetool_wear(item)
   	return item
   else
     return item
-  end 
+  end
 end --bridgetool_wear
 
 
@@ -143,7 +150,8 @@ function bridgetool_place(item, player, pointed)
       --under does not change, but above is altered to point to node forward(yaw) from under
       pointed.above=offset_pos(pointed.under,yaw)
       local holdforward=pointed.above   --store for later deletion in mode 2 and 3
-      stack,success=item_place(stack,player,pointed,inv,idx)  --place the forward block
+      local firststairface
+      stack,success,firststairface=item_place(stack,player,pointed,inv,idx,mode,-1)  --place the forward block
       if not success then
         minetest.chat_send_player(player_name, "bridge tool: unable to place Forward at "..pos_to_string(pointed.above))
       elseif mode==2 or mode==3 then --elseif means successs=true, check Mode up or down
@@ -158,35 +166,35 @@ function bridgetool_place(item, player, pointed)
           --try to place above the new block
           pointed.above=offset_pos(pointed.under,999)
         end --mode 2 - 3
-        stack,success=item_place(stack,player,pointed,inv,idx,mode)
+        stack,success=item_place(stack,player,pointed,inv,idx,mode,firststairface)
         if not success then
           minetest.chat_send_player(player_name, "bridge tool: unable to place "..mode_text[mode][1].." at "..pos_to_string(pointed.above))
         end --if not success block 2
         --remove the extra stone whether success on block 2 or not
         minetest.node_dig(holdforward,minetest.get_node(holdforward),player)
       end -- if not success block 1 elseif succes block 1 and mode 2 or 3
-      
+
       --now try for the width
-      if success then  --only proceed with width if last block placed was a success        
+      if success then  --only proceed with width if last block placed was a success
         item=bridgetool_wear(item)
         for w=2,width do
           pointed.under=pointed.above --block 2 is now the under block
           local right90=rotate_yaw(yaw,-90)
           pointed.above=offset_pos(pointed.under,right90)
-          --minetest.chat_send_player(player_name, " yaw="..yaw.." right90="..right90.." under="..pos_to_string(pointed.under).." above="..pos_to_string(pointed.above))                      
-          stack,success=item_place(stack,player,pointed,inv,idx)
+          --minetest.chat_send_player(player_name, " yaw="..yaw.." right90="..right90.." under="..pos_to_string(pointed.under).." above="..pos_to_string(pointed.above))
+          stack,success=item_place(stack,player,pointed,inv,idx,mode,firststairface)
           if not success then
-            minetest.chat_send_player(player_name, "bridge tool: unable to place width "..w.." at "..pos_to_string(pointed.above))            
+            minetest.chat_send_player(player_name, "bridge tool: unable to place width "..w.." at "..pos_to_string(pointed.above))
             break
-          else   
+          else
             item=bridgetool_wear(item)
           end --if not success
-        end --for      
+        end --for
       end --if success
-            
+
     end --pointed.type="node" and pointed.under~=nil
   end --pointed ~= nil
-return item  
+return item
 end --function bridgetool_place
 
 
@@ -198,11 +206,11 @@ function get_bridgetool_meta(item)
     --metadata<3 means tool was created with a bridgetool 1.0 and doesn't have width set
     return nil, nil
   else --valid metadata
-    local mode=tonumber(string.sub(metadata,1,1))  
+    local mode=tonumber(string.sub(metadata,1,1))
     local width=tonumber(string.sub(metadata,3,3))
     return mode, width
   end  -- if not metadata
-end --get_bridgetool_meta 
+end --get_bridgetool_meta
 
 
 --on left click switch the mode of the bridge tool
@@ -210,10 +218,10 @@ end --get_bridgetool_meta
 function bridgetool_switchmode(item, player, pointed) --pointed is ignored
   local player_name = player:get_player_name()  --for chat messages
   mode,width=get_bridgetool_meta(item)
-  if mode==nil or width==nil then 
+  if mode==nil or width==nil then
     --if item has not been used and mode not set yet,
     --or a pre-width item that needs to have width added
-    minetest.chat_send_player(player_name, "Left click to change mode between 1:Forward, 2:Down, 3:Up,  Leftclick+Sneak to change width, Right click to place, uses inventory stack directly to right of bridge tool")    
+    minetest.chat_send_player(player_name, "Left click to change mode between 1:Forward, 2:Down, 3:Up,  Leftclick+Sneak to change width, Right click to place, uses inventory stack directly to right of bridge tool")
     mode=1
     width=1
   else --valid mode and width
@@ -267,7 +275,7 @@ for m = 1, 3 do
       on_use = bridgetool_switchmode
     })
   end --for w
-end --for m  
+end --for m
 
 
 --temporary for backwards compatibility, remove this after a version or two
@@ -282,4 +290,4 @@ for m = 1, 3 do
       on_place = bridgetool_place,
       on_use = bridgetool_switchmode
     })
-end --for m  
+end --for m
