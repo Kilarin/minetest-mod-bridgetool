@@ -29,8 +29,8 @@ If the bridge tool can not build where you asked it to, or if it runs out of mat
 
 The bridge tool is crafted using 3 steel ingots in a v shape, and one mese crystal:<p>
 ```
-steel ingot,                     ,steel ingot<p>
-           ,    steel ingot      ,<p>
+steel ingot,                     ,steel ingot
+           ,    steel ingot      ,
            ,mese crystal fragment,
 ```
 ![alt text](http://i57.tinypic.com/1zgay6f.png "image")<p>
@@ -42,7 +42,7 @@ And the bridge tool is now configured to wear out.  If you wish to implement thi
 
 **Video:**<p>
 Excalibur Zero created a video demonstrating this mod:<p>
-[https://www.youtube.com/watch?v=j2E9ojtyitc](https://www.youtube.com/watch?v=j2E9ojtyitc)]https://www.youtube.com/watch?v=j2E9ojtyitc[/url]
+[https://www.youtube.com/watch?v=j2E9ojtyitc](https://www.youtube.com/watch?v=j2E9ojtyitc)
 
 **Author:** Kilarin (Donald Hines)
 
@@ -60,10 +60,10 @@ Problems have been reported when using this mod with inventory tweak
 code CC0, textures CC BY-SA 3.0
 
 **github source:**<p>
-[https://github.com/Kilarin/minetest-mod-bridgetool](https://github.com/Kilarin/minetest-mod-bridgetool)]https://github.com/Kilarin/minetest-mod-bridgetool[/url]
+[https://github.com/Kilarin/minetest-mod-bridgetool](https://github.com/Kilarin/minetest-mod-bridgetool)
 
 **Download:**<p>
-[https://github.com/Kilarin/minetest-mod-bridgetool/archive/master.zip](https://github.com/Kilarin/minetest-mod-bridgetool/archive/master.zip)]https://github.com/Kilarin/minetest-mod-bridgetool/archive/master.zip[/url]
+[https://github.com/Kilarin/minetest-mod-bridgetool/archive/master.zip](https://github.com/Kilarin/minetest-mod-bridgetool/archive/master.zip)
 
 **To install:**<p>
 Simply unzip the file into your mods folder, then rename the resulting folder from minetest-mod-bridgetool-master to bridgetool<p>
@@ -71,7 +71,7 @@ OR, simply install it directly from minetest using the online mod repository.
 
 **Mod Database:**<p>
 If you use this mod, please consider reviewing it on the MineTest Mod Database.<p>
-[https://forum.minetest.net/mmdb/mod/bridgetool/](https://forum.minetest.net/mmdb/mod/bridgetool/)]https://forum.minetest.net/mmdb/mod/bridgetool/[/url]
+[https://forum.minetest.net/mmdb/mod/bridgetool/](https://forum.minetest.net/mmdb/mod/bridgetool/)
 
 **Changelog**<p>
 --Version 2.1<p>

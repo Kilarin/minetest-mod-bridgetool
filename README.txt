@@ -30,7 +30,8 @@ The bridge tool is crafted using 3 steel ingots in a v shape, and one mese cryst
 [code]
 steel ingot,                     ,steel ingot
            ,    steel ingot      ,
-           ,mese crystal fragment,[/code]
+           ,mese crystal fragment,
+[/code]
 [img]http://i57.tinypic.com/1zgay6f.png[/img]
 The inventory image will switch from the tool itself to the mode image the first time you left click with the tool.
 
