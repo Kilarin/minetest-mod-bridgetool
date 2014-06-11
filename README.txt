@@ -1,4 +1,4 @@
-Bridge Tool Version 2.1
+[b]Bridge Tool Version 2.1[/b]
 This mod adds a new "bridge tool" that makes placing stone (or glass, earth, or any material) while building a bridge in no-fly mode easy.
 
 The bridge tool has 3 modes that can be switched by left clicking with the tool.
@@ -65,6 +65,11 @@ code CC0, textures CC BY-SA 3.0
 
 [b]To install:[/b]
 Simply unzip the file into your mods folder, then rename the resulting folder from minetest-mod-bridgetool-master to bridgetool
+OR, simply install it directly from minetest using the online mod repository.
+
+[b]Mod Database:[/b]
+If you use this mod, please consider reviewing it on the MineTest Mod Database.
+[url]https://forum.minetest.net/mmdb/mod/bridgetool/[/url]
 
 [b]Changelog[/b]
 --Version 2.1
