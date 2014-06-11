@@ -28,10 +28,11 @@ And when you select a **width** of 2 or 3 by holding down the sneak button and l
 If the bridge tool can not build where you asked it to, or if it runs out of material in the stack to the right of the tool, it will notify you of the problem via chat message.
 
 The bridge tool is crafted using 3 steel ingots in a v shape, and one mese crystal:<p>
-```<p>
+```
 steel ingot,                     ,steel ingot<p>
            ,    steel ingot      ,<p>
-           ,mese crystal fragment,```<p>
+           ,mese crystal fragment,
+```
 ![alt text](http://i57.tinypic.com/1zgay6f.png "image")<p>
 The inventory image will switch from the tool itself to the mode image the first time you left click with the tool.
 
