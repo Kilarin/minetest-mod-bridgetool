@@ -1,5 +1,5 @@
------------------------------   
--- Bridge Tool version 2.1 --
+-----------------------------
+-- Bridge Tool version 2.2 --
 -----------------------------
 
 --This code was written by Kilarin (Donald Hines)
@@ -9,6 +9,10 @@
 --as CC BY-SA
 --Topywo suggested adding wear, correcting down stair orientation, and using not_in_creative_inventory=1
 --Sokomine suggested adding width so that you could build 2 or 3 wide.
+--
+
+local enable_chat_warn="YES"  --set to "NO" to turn off all chat error messages from this mod
+
 
 local bridgetool = {
   --set this value to something higher than zero if you want bridge tool to wear out
@@ -130,7 +134,9 @@ function bridgetool_place(item, player, pointed)
   local inv = player:get_inventory()
   local stack = inv:get_stack("main", idx) --stack=stack to right of tool
   if stack:is_empty() then
-    minetest.chat_send_player(player_name,"bridge tool: no more material to place in stack to right of bridge tool")
+    if enable_chat_warn=="YES" then
+      minetest.chat_send_player(player_name,"bridge tool: no more material to place in stack to right of bridge tool")
+    end --chat_warn
   end --stack:is_empty
   if stack:is_empty()==false and pointed ~= nil then
     local success
@@ -153,7 +159,9 @@ function bridgetool_place(item, player, pointed)
       local firststairface
       stack,success,firststairface=item_place(stack,player,pointed,inv,idx,mode,-1)  --place the forward block
       if not success then
-        minetest.chat_send_player(player_name, "bridge tool: unable to place Forward at "..pos_to_string(pointed.above))
+        if enable_chat_warn=="YES" then
+          minetest.chat_send_player(player_name, "bridge tool: unable to place Forward at "..pos_to_string(pointed.above))
+        end --chat_warn
       elseif mode==2 or mode==3 then --elseif means successs=true, check Mode up or down
         --mode 2 and 3 then add another block either up or down from the forward block
         --and remove the forward block
@@ -168,7 +176,9 @@ function bridgetool_place(item, player, pointed)
         end --mode 2 - 3
         stack,success=item_place(stack,player,pointed,inv,idx,mode,firststairface)
         if not success then
-          minetest.chat_send_player(player_name, "bridge tool: unable to place "..mode_text[mode][1].." at "..pos_to_string(pointed.above))
+          if enable_chat_warn=="YES" then
+            minetest.chat_send_player(player_name, "bridge tool: unable to place "..mode_text[mode][1].." at "..pos_to_string(pointed.above))
+          end --chat_warn
         end --if not success block 2
         --remove the extra stone whether success on block 2 or not
         minetest.node_dig(holdforward,minetest.get_node(holdforward),player)
@@ -184,7 +194,9 @@ function bridgetool_place(item, player, pointed)
           --minetest.chat_send_player(player_name, " yaw="..yaw.." right90="..right90.." under="..pos_to_string(pointed.under).." above="..pos_to_string(pointed.above))
           stack,success=item_place(stack,player,pointed,inv,idx,mode,firststairface)
           if not success then
-            minetest.chat_send_player(player_name, "bridge tool: unable to place width "..w.." at "..pos_to_string(pointed.above))
+            if enable_chat_warn=="YES" then
+              minetest.chat_send_player(player_name, "bridge tool: unable to place width "..w.." at "..pos_to_string(pointed.above))
+            end --chat_warn
             break
           else
             item=bridgetool_wear(item)
@@ -217,6 +229,8 @@ end --get_bridgetool_meta
 --also deals with sneak-leftclick which sets width
 function bridgetool_switchmode(item, player, pointed) --pointed is ignored
   local player_name = player:get_player_name()  --for chat messages
+  local mode
+  local width
   mode,width=get_bridgetool_meta(item)
   if mode==nil or width==nil then
     --if item has not been used and mode not set yet,
@@ -241,14 +255,21 @@ function bridgetool_switchmode(item, player, pointed) --pointed is ignored
   end --bridgetool_switchmode
 
 
-minetest.register_craft({
-        output = 'bridgetool:bridge_tool',
-  recipe = {
-    {'default:steel_ingot', '', 'default:steel_ingot'},
-    {'', 'default:steel_ingot', ''},
-    {'', 'default:mese_crystal_fragment', ''},
-  }
-})
+--we put the recipie inside an if checking for default so that
+--in the unlikely case someone is running this without default,
+--they still could.  they would just have to use /giveme or creative
+--mode to get the tools
+if minetest.get_modpath("default") then
+  minetest.register_craft({
+          output = 'bridgetool:bridge_tool',
+    recipe = {
+      {'default:steel_ingot', '', 'default:steel_ingot'},
+      {'', 'default:steel_ingot', ''},
+      {'', 'default:mese_crystal_fragment', ''},
+    }
+  })
+end --if default
+
 
 --this one appears in crafting lists and when you first craft the item
   minetest.register_tool("bridgetool:bridge_tool", {

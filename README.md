@@ -1,6 +1,6 @@
 This mod adds a new "bridge tool" that makes placing stone (or glass, earth, or any material) while building a bridge in no-fly mode easy.
 
-**Bridge Tool Version 2.1**
+**Bridge Tool Version 2.2**
 
 The bridge tool has 3 modes that can be switched by left clicking with the tool.<p>
 And you can switch the WIDTH of the path built by holding down the SNEAK key and left clicking.<p>
@@ -66,7 +66,7 @@ code CC0, textures CC BY-SA 3.0
 [https://github.com/Kilarin/minetest-mod-bridgetool/archive/master.zip](https://github.com/Kilarin/minetest-mod-bridgetool/archive/master.zip)
 
 **To install:**<p>
-Simply unzip the file into your mods folder, then rename the resulting folder from minetest-mod-bridgetool-master to bridgetool<p>
+Simply unzip the file into your mods folder, then rename the resulting folder from bridgetool-master to bridgetool<p>
 OR, simply install it directly from minetest using the online mod repository.
 
 **Mod Database:**<p>
@@ -74,6 +74,12 @@ If you use this mod, please consider reviewing it on the MineTest Mod Database.<
 [https://forum.minetest.net/mmdb/mod/bridgetool/](https://forum.minetest.net/mmdb/mod/bridgetool/)
 
 **Changelog**<p>
+--Version 2.2<p>
+Added new global enable_chat_warn at top of init.lua that can be set to NO if you don't want bridgetool warning messages to appear in chat.<p>
+Put the recipie inside an if checking for default so that  in the unlikely case someone is running this without default, they still could.  they would just have to use /giveme or creative mode to get the tools<p>
+Corrected two undeclared globals to locals.<p>
+Renamed the git repository to bridgetool-master to be in line with other mods.
+
 --Version 2.1<p>
 Corrected fact that 3 wide stairs would sometimes orient the 3rd stair the wrong way<p>
 Modified stair orientation when using mode 1(forward) so that the stair will face down (since the only reason you would use the "forward" option with this tool and a staircase is to begin a down stair.)
